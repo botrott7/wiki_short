@@ -1,5 +1,4 @@
 import nltk
-import os
 
 
 def evaluate_summary(reference_summary, extracted_summary):
@@ -28,18 +27,18 @@ def evaluate_summary(reference_summary, extracted_summary):
 
     return precision, recall, f1_score
 
-
-input_file = os.path.join('../articles', 'Мир.txt')
-output_file = os.path.join('../results', 'Мир_summary.txt')
-
-# Пример использования
-with open(input_file, 'r', encoding='utf-8') as file:
-    reference_summary = file.read()
-
-with open(output_file, 'r', encoding='utf-8') as file:
-    extracted_summary = file.read()
-
-precision, recall, f1_score = evaluate_summary(reference_summary, extracted_summary)
-print(f"Точность: {precision:.2f}")
-print(f"Полнота: {recall:.2f}")
-print(f"F1-мера: {f1_score:.2f}")
+# import os
+# input_file = os.path.join('../articles', 'Мир.txt')
+# output_file = os.path.join('../results', 'Мир_summary.txt')
+#
+# # Пример использования
+# with open(input_file, 'r', encoding='utf-8') as file:
+#     reference_summary = file.read()
+#
+# with open(output_file, 'r', encoding='utf-8') as file:
+#     extracted_summary = file.read()
+#
+# precision, recall, f1_score = evaluate_summary(reference_summary, extracted_summary)
+# print(f"Точность: {precision:.2f}")
+# print(f"Полнота: {recall:.2f}")
+# print(f"F1-мера: {f1_score:.2f}")
