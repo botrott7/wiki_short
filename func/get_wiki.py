@@ -1,5 +1,6 @@
 import requests
 
+from log.logs import logger
 
 def get_wikipedia_article(title, lang='ru', format='json'):
     try:
@@ -20,6 +21,7 @@ def get_wikipedia_article(title, lang='ru', format='json'):
         article = page['extract']
         return article
     except requests.exceptions.RequestException as e:
-        print(f'Ошибка при получении статьи: {e}')
+        logger.error(f'Ошибка при получении статьи: {str(e)}')
     except KeyError:
-        print('Страница не найдена')
+        logger.error('Страница не найдена')
+        raise

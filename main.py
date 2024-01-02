@@ -1,12 +1,15 @@
 import os
+import requests
+
 from func.get_wiki import get_wikipedia_article
 from func.summary import summarize_text
-import requests
+from log.logs import logger
 
 
 def save_article(article, filename):
     with open(filename, 'w', encoding='utf-8') as file:
         file.write(article)
+    logger.info(f'Файл {filename} добавлен в директорию "articles"')
 
 
 def main():
@@ -19,7 +22,6 @@ def main():
             if article:
                 filename = os.path.join('articles', f'{article_title}.txt')
                 save_article(article, filename)
-                print(f'Файл', f'{article_title}.txt', 'добавлен в articles, директории articles')
 
                 input_file = f'articles/{article_title}.txt'
                 output_file = f'results/{article_title}_summary.txt'
@@ -34,15 +36,15 @@ def main():
                     summary = summarize_text(text, num_sentences=3, stop_words=None, similarity_criteria='token')
                     with open(output_file, 'w', encoding='utf-8') as f:
                         f.write(summary)
-                    print(f'Ключевые факты сохранены в файл {article_title}.txt, директории results')
+                    logger.info(f'Ключевые факты сохранены в файл {output_file}')
                 except Exception as e:
-                    print('Произошла ошибка при извлечении ключевых фактов:', str(e))
+                    logger.error(f'Произошла ошибка при извлечении ключевых фактов: {str(e)}')
 
             else:
-                print('Страница не найдена')
+                logger.error('Страница не найдена')
 
         except requests.exceptions.RequestException:
-            print(f'Ошибка при сохранении статьи')
+            logger.error('Ошибка при сохранении статьи')
 
 
 if __name__ == '__main__':

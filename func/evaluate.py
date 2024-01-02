@@ -1,4 +1,5 @@
 import nltk
+from log.logs import logger
 
 
 def evaluate_summary(reference_summary, extracted_summary):
@@ -13,19 +14,23 @@ def evaluate_summary(reference_summary, extracted_summary):
     - recall: полнота (отношение количества верно извлеченных токенов к общему количеству токенов в referencesummary)
     - f1score: F1-мера (гармоническое среднее точности и полноты)
     """
+    try:
+        reference_tokens = set(nltk.word_tokenize(reference_summary.lower()))
+        extracted_tokens = set(nltk.word_tokenize(extracted_summary.lower()))
 
-    reference_tokens = set(nltk.word_tokenize(reference_summary.lower()))
-    extracted_tokens = set(nltk.word_tokenize(extracted_summary.lower()))
+        true_positives = len(reference_tokens.intersection(extracted_tokens))
+        false_positives = len(extracted_tokens - reference_tokens)
+        false_negatives = len(reference_tokens - extracted_tokens)
 
-    true_positives = len(reference_tokens.intersection(extracted_tokens))
-    false_positives = len(extracted_tokens - reference_tokens)
-    false_negatives = len(reference_tokens - extracted_tokens)
+        precision = true_positives / (true_positives + false_positives + 1e-12)
+        recall = true_positives / (true_positives + false_negatives + 1e-12)
+        f1_score = 2 * (precision * recall) / (precision + recall + 1e-12)
 
-    precision = true_positives / (true_positives + false_positives + 1e-12)
-    recall = true_positives / (true_positives + false_negatives + 1e-12)
-    f1_score = 2 * (precision * recall) / (precision + recall + 1e-12)
-
-    return precision, recall, f1_score
+        logger.info(f'Итоговая оценка: Точность={precision}, Отзыв={recall}, F1-оценка={f1_score}')
+        return precision, recall, f1_score
+    except Exception as e:
+        logger.error(f'Во время итоговой оценки произошла ошибка: {str(e)}')
+        raise
 
 # import os
 # input_file = os.path.join('../articles', 'Мир.txt')
